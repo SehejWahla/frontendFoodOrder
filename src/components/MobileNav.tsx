@@ -9,6 +9,7 @@ import {
 import { Menu } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const MobileNav = () => {
   return (
@@ -22,7 +23,12 @@ const MobileNav = () => {
         </SheetTitle>
         <Separator />
         <SheetDescription className="flex">
-          <Button className="flex-1 font-bold bg-orange-500">Log In</Button>
+          <Link
+            to="/auth"
+            className="font-bold text-xl hover:text-orange-500 hover:bg-white"
+          >
+            Log In
+          </Link>
         </SheetDescription>
       </SheetContent>
     </Sheet>

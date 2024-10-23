@@ -1,12 +1,13 @@
 import { Button } from "./button";
+import { Link } from "react-router-dom";
 const MainNav = () => {
   return (
-    <Button
-      variant="ghost"
+    <Link
+      to="/auth"
       className="font-bold text-xl hover:text-orange-500 hover:bg-white"
     >
       Log In
-    </Button>
+    </Link>
   );
 };
 
