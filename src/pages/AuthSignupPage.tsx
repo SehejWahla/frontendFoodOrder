@@ -4,8 +4,12 @@ import GoogleLogo from "@/assets/googleLogo.png";
 import { useGoogleLogin } from "@react-oauth/google";
 import { Button } from "@/components/ui/button";
 import { useSignUpAuth } from "@/hooks/useSignUpAuth";
+import { setCredentials } from "@/store/slices/authReducer"; // Assuming this action sets user and token in Redux
+import { useDispatch } from "react-redux";
+import { decodeToken } from "@/services/auth.utils";
 
 const AuthSignupPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,12 +31,16 @@ const AuthSignupPage = () => {
     if (isSuccess && data?.token) {
       // Store the token
       localStorage.setItem("token", data.token);
+      const userData = decodeToken(data.token);
       // Show success message
       console.log("Account created successfully!");
+      if (userData)
+        dispatch(setCredentials({ token: data.token, user: userData }));
+
       // Redirect to dashboard
       navigate("/dashboard");
     }
-  }, [isSuccess, data, navigate]);
+  }, [isSuccess, data, navigate, dispatch]);
 
   // Handle error state
   useEffect(() => {

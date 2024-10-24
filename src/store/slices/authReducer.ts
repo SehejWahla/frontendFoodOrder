@@ -21,7 +21,7 @@ export interface authInitialState {
 const initialState: authInitialState = {
   user: null,
   token: localStorage.getItem("token"),
-  isLoading: false,
+  isLoading: true,
 };
 
 const authSlice = createSlice({

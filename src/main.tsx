@@ -21,6 +21,9 @@ const AuthInitializer = ({ children }: AuthInitializerProps) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Start loading while checking the authentication state
+    dispatch(setLoading(true));
+
     const token = localStorage.getItem("token");
     if (token) {
       const userData = decodeToken(token);
@@ -28,10 +31,12 @@ const AuthInitializer = ({ children }: AuthInitializerProps) => {
         dispatch(setCredentials({ token, user: userData }));
       }
     }
+
+    // Authentication check complete
     dispatch(setLoading(false));
   }, [dispatch]);
 
-  return children;
+  return <>{children}</>; // Ensure children render after useEffect runs
 };
 
 const queryClient = new QueryClient({
@@ -43,13 +48,14 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId="739062353379-9rq3ojkbgogues6ldrs2eid2sn98llfs.apps.googleusercontent.com">
         <Provider store={store}>
-          <AuthInitializer>
-            <StrictMode>
-              <Router>
+          <StrictMode>
+            <Router>
+              <AuthInitializer>
+                {" "}
                 <AppRoutes />
-              </Router>
-            </StrictMode>
-          </AuthInitializer>
+              </AuthInitializer>
+            </Router>
+          </StrictMode>
         </Provider>
       </GoogleOAuthProvider>
     </QueryClientProvider>
