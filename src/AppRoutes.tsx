@@ -1,37 +1,44 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Layout from "@/layouts/layout";
-import HomePage from "./pages/HomePage";
-import AuthPage from "./pages/AuthPage";
-import AuthSignupPage from "./pages/AuthSignupPage";
+import { routes } from "./routes/routes";
+import Layout from "./layouts/layout";
+import React from "react";
+import { Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./components/protectedRoute";
+
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Layout>
-            <HomePage />
-          </Layout>
+      {routes.map((route, key) => {
+        const Element = (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Layout>{React.createElement(route.component)}</Layout>
+          </Suspense>
+        );
+
+        // If route is protected, wrap it with PrivateRoute
+        if (route.access?.length) {
+          return (
+            <Route
+              key={key}
+              path={route.path}
+              element={
+                <PrivateRoute accessRoles={route.access}>
+                  {Element}
+                </PrivateRoute>
+              }
+            />
+          );
         }
-      />
-      <Route
-        path="/auth"
-        element={
-          <Layout>
-            <AuthPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/auth/signup"
-        element={
-          <Layout>
-            <AuthSignupPage />
-          </Layout>
-        }
-      />
-      <Route path="/user-profile" element={<span>User Profile Page</span>} />
-      <Route path="*" element={<Navigate to="/" />} />
+
+        // Public route
+        return <Route key={key} path={route.path} element={Element} />;
+      })}
+
+      {/* Redirect to dashboard if token exists */}
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+
+      {/* Catch-all route to redirect to auth if not found */}
+      <Route path="*" element={<Navigate to="/auth" />} />
     </Routes>
   );
 };
