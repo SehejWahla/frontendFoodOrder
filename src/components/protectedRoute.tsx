@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { RootState } from "../store/store";
 import { ReactNode } from "react";
+import Loading from "./ui/Loading";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -16,7 +17,7 @@ const PrivateRoute = ({ children, accessRoles = [] }: PrivateRouteProps) => {
 
   // Show a loader while checking authentication
   if (isLoading) {
-    return <div>Loading...</div>; // Replace with a custom spinner if needed
+    return <Loading />; // Replace with a custom spinner if needed
   }
 
   // If not authenticated, redirect to /auth

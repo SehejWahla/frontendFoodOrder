@@ -7,13 +7,14 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PrivateRoute from "./components/protectedRoute";
 import { RootState } from "./store/store";
+import Loading from "./components/ui/Loading";
 
 const AppRoutes = () => {
   const { token, isLoading } = useSelector((state: RootState) => state.auth);
 
   // Render loading screen if still checking authentication
   if (isLoading) {
-    return <div>Loading...</div>; // Replace with your custom spinner if needed
+    return <Loading />;
   }
 
   return (
@@ -21,7 +22,7 @@ const AppRoutes = () => {
       {routes.map((route, key) => {
         console.log("route is", route.name, route.path);
         const Element = (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Layout>{React.createElement(route.component)}</Layout>
           </Suspense>
         );
