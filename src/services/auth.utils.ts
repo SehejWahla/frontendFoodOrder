@@ -5,9 +5,15 @@ export const decodeToken = (token: string): user | null => {
     const payload = JSON.parse(atob(token.split(".")[1]));
     const currentTime = Math.floor(Date.now() / 1000);
 
-    if (payload.exp && currentTime > payload.exp) {
+    console.log(currentTime, payload.exp);
+
+    if (!payload.exp) return null;
+
+    if (payload.iat && currentTime > payload.exp) {
       return null;
     }
+
+    console.log("payload", payload);
 
     return payload as user;
   } catch {

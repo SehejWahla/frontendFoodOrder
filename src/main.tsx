@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { decodeToken } from "./services/auth.utils";
-import { setCredentials, setLoading } from "./store/slices/authReducer";
+import { logout, setCredentials, setLoading } from "./store/slices/authReducer";
 
 interface AuthInitializerProps {
   children: ReactNode;
@@ -29,6 +29,9 @@ const AuthInitializer = ({ children }: AuthInitializerProps) => {
       const userData = decodeToken(token);
       if (userData) {
         dispatch(setCredentials({ token, user: userData }));
+      } else {
+        console.log("dispatch logout");
+        dispatch(logout());
       }
     }
 
